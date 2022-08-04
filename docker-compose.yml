@@ -7,7 +7,7 @@ volumes:
 services:
   kibana:
     container_name: kibana
-    image: kibana:7.16.3
+    build: ./kibana
     ports:
       - "5601:5601"
 
