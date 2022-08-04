@@ -1,0 +1,29 @@
+version: "3.8"
+
+volumes:
+  mysql_data:
+  elasticsearch_volume:
+
+services:
+  kibana:
+    container_name: kibana
+    build: ./kibana
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
+    ports:
+      - "5601:5601"
+
+  elasticsearch:
+    build:
+      context: elastic_search/
+      args:
+        ELK_VERSION: 7.16.3
+    restart: always
+    volumes:
+      - ./elastic_search/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - elasticsearch_volume:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
